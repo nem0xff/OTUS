@@ -43,7 +43,7 @@ func NewShorten(deduplication bool, validation bool) (*Shorten, error) {
 // Shorten - get short link of url
 func (s *Shorten) Shorten(urlPath string) (string, error) {
 	var key string
-	//u, err := url.ParseRequestURI(urlPath)
+
 	if s.enableValidation {
 		if !govalidator.IsURL(urlPath) {
 			return "", errors.New("Не валидный Url. " + urlPath)
