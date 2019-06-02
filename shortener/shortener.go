@@ -80,7 +80,6 @@ func base10ToNewBase(i int) string {
 	remain := i
 
 	for remain > base-1 {
-		//fmt.Printf("remain = %v, base = %v, remainbase = %v\n", remain, base, string(alphabet[remain%base]))
 		result = append(result, alphabet[remain%base])
 		remain = remain / base
 	}
@@ -100,7 +99,6 @@ func newBaseToBase10(number string) int {
 	for i, s := range number {
 		index := strings.Index(alphabet, string(s))
 		result = result + index*int(math.Pow(float64(base), float64(lenght-i)))
-		//fmt.Printf("current symbol = %v, i = %v, s = %v, index = %v, result=%v, %v\n", string(s), i, s, index, result, math.Pow(float64(base), float64(i)))
 	}
 	return result
 }
