@@ -93,8 +93,7 @@ func makePseudoURL() string {
 	for lenght = 0; lenght < 10; {
 		lenght = int(src.Int63() & letterIdxMask) // from 1 to 63
 	}
-	// TODO: добавить валидацию. Очевидно ошибка если первые символы "/"
-	return "http://" + genString(lenght)
+	return "http://random" + genString(lenght)
 }
 
 func genString(n int) string {
