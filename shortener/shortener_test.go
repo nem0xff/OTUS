@@ -20,22 +20,20 @@ const (
 )
 
 func init() {
-	err := mystruct.SetDeduplicationStatus(true)
+	mystruct.hashToNum = make(map[string]string) // инициализация карты для дедупликации
+	err := mystruct.SetDeduplicationStatus(true) // использовать дедупликацию
 	if err != nil {
 		panic("ошибка установки статуса дедупликации")
 	}
 }
 
-func BenchmarkAddLinks(b *testing.B) {
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		//for j := 0; j < 100000; j++ { // Добавляем 100 000 URL'ов
-		_ = mystruct.Shorten(makePseudoURL())
-		//fmt.Println(key)
-		//}
-	}
-	//PrintMemUsage()
+func TestAddLinks(t *testing.T) {
 
+	for j := 0; j < 100000; j++ { // Добавляем 100 000 URL'ов
+		_ = mystruct.Shorten(makePseudoURL())
+	}
+
+	PrintMemUsage()
 }
 
 func TestShorten(t *testing.T) {

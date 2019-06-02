@@ -1,6 +1,8 @@
 package shortener
 
 import (
+	"crypto/md5"
+	"fmt"
 	"math"
 	"strings"
 )
@@ -25,9 +27,22 @@ type Shorten struct {
 
 // Shorten - get short link of url
 func (s *Shorten) Shorten(url string) string {
+	var key string
 	s.storage = append(s.storage, url)
 	lastPosition := len(s.storage) - 1
-	return base10ToNewBase(lastPosition)
+
+	if s.deduplication {
+		md5sum := fmt.Sprintf("%x", md5.Sum([]byte(url)))
+		if val, ok := s.hashToNum[md5sum]; ok {
+			key = val
+		} else {
+			key = base10ToNewBase(lastPosition)
+			s.hashToNum[md5sum] = key
+		}
+	} else {
+		key = base10ToNewBase(lastPosition)
+	}
+	return key
 }
 
 // Resolve - resolv short link of url
