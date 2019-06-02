@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-var mystruct Shorten
+var mystruct *Shorten
 
 var src = rand.NewSource(time.Now().UnixNano())
 
@@ -20,10 +20,10 @@ const (
 )
 
 func init() {
-	mystruct.hashToNum = make(map[string]string) // инициализация карты для дедупликации
-	err := mystruct.SetDeduplicationStatus(true) // использовать дедупликацию
+	var err error
+	mystruct, err = NewShorten(true) // первый параметр устанавливает значение дедупликации по умолчанию
 	if err != nil {
-		panic("ошибка установки статуса дедупликации")
+		panic("Ошибка создания объекта")
 	}
 }
 

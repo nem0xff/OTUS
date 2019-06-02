@@ -25,6 +25,16 @@ type Shorten struct {
 	hashToNum     map[string]string
 }
 
+// NewShorten - create instance with init
+func NewShorten(deduplication bool) (*Shorten, error) {
+
+	shorten := Shorten{}
+	shorten.hashToNum = make(map[string]string)
+	shorten.deduplication = deduplication
+
+	return &shorten, nil
+}
+
 // Shorten - get short link of url
 func (s *Shorten) Shorten(url string) string {
 	var key string
