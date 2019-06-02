@@ -2,9 +2,12 @@ package shortener
 
 import (
 	"crypto/md5"
+	"errors"
 	"fmt"
 	"math"
 	"strings"
+
+	"github.com/asaskevich/govalidator"
 )
 
 const (
@@ -20,29 +23,38 @@ type Shortener interface {
 
 // Shorten - main struct
 type Shorten struct {
-	deduplication bool
-	storage       []string
-	hashToNum     map[string]string
+	deduplication    bool
+	enableValidation bool
+	storage          []string
+	hashToNum        map[string]string
 }
 
 // NewShorten - create instance with init
-func NewShorten(deduplication bool) (*Shorten, error) {
+func NewShorten(deduplication bool, validation bool) (*Shorten, error) {
 
 	shorten := Shorten{}
 	shorten.hashToNum = make(map[string]string)
 	shorten.deduplication = deduplication
+	shorten.enableValidation = validation
 
 	return &shorten, nil
 }
 
 // Shorten - get short link of url
-func (s *Shorten) Shorten(url string) string {
+func (s *Shorten) Shorten(urlPath string) (string, error) {
 	var key string
-	s.storage = append(s.storage, url)
+	//u, err := url.ParseRequestURI(urlPath)
+	if s.enableValidation {
+		if !govalidator.IsURL(urlPath) {
+			return "", errors.New("Не валидный Url. " + urlPath)
+		}
+	}
+
+	s.storage = append(s.storage, urlPath)
 	lastPosition := len(s.storage) - 1
 
 	if s.deduplication {
-		md5sum := fmt.Sprintf("%x", md5.Sum([]byte(url)))
+		md5sum := fmt.Sprintf("%x", md5.Sum([]byte(urlPath)))
 		if val, ok := s.hashToNum[md5sum]; ok {
 			key = val
 		} else {
@@ -52,7 +64,7 @@ func (s *Shorten) Shorten(url string) string {
 	} else {
 		key = base10ToNewBase(lastPosition)
 	}
-	return key
+	return key, nil
 }
 
 // Resolve - resolv short link of url

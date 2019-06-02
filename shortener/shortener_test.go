@@ -21,7 +21,7 @@ const (
 
 func init() {
 	var err error
-	mystruct, err = NewShorten(true) // первый параметр устанавливает значение дедупликации по умолчанию
+	mystruct, err = NewShorten(true, true) // первый параметр устанавливает значение дедупликации по умолчанию, второй параметр включает валидацию URL
 	if err != nil {
 		panic("Ошибка создания объекта")
 	}
@@ -30,7 +30,10 @@ func init() {
 func TestAddLinks(t *testing.T) {
 
 	for j := 0; j < 100000; j++ { // Добавляем 100 000 URL'ов
-		_ = mystruct.Shorten(makePseudoURL())
+		_, err := mystruct.Shorten(makePseudoURL())
+		if err != nil {
+			t.Log("Был получен не валидный URL")
+		}
 	}
 
 	PrintMemUsage()
@@ -39,7 +42,10 @@ func TestAddLinks(t *testing.T) {
 func TestShorten(t *testing.T) {
 
 	myURL := makePseudoURL()
-	shortLinkKey := mystruct.Shorten(myURL)
+	shortLinkKey, err := mystruct.Shorten(myURL)
+	if err != nil {
+		t.Error("Был получен не валидный URL")
+	}
 	if shortLinkKey == "" {
 		t.Error("При добавлении элемента вернулся пустой ключ")
 	}
@@ -47,7 +53,10 @@ func TestShorten(t *testing.T) {
 
 func TestResolve(t *testing.T) {
 	myURL := makePseudoURL()
-	shortLinkKey := mystruct.Shorten(myURL)
+	shortLinkKey, err := mystruct.Shorten(myURL)
+	if err != nil {
+		t.Error("Был получен не валидный URL")
+	}
 	if myURL != mystruct.Resolve(shortLinkKey) {
 		t.Error("Вернулся не правильный результат")
 	}
@@ -72,18 +81,53 @@ func TestNewBaseToBase10(t *testing.T) {
 func TestDeduplication(t *testing.T) {
 	mystruct.SetDeduplicationStatus(true) // включаем дедупликацию если не включена
 	myURL := makePseudoURL()
-	shortLinkKey1 := mystruct.Shorten(myURL)
-	shortLinkKey2 := mystruct.Shorten(myURL)
+	shortLinkKey1, err := mystruct.Shorten(myURL)
+	if err != nil {
+		t.Error("Был получен не валидный URL")
+	}
+	shortLinkKey2, err := mystruct.Shorten(myURL)
+	if err != nil {
+		t.Error("Был получен не валидный URL")
+	}
 	if shortLinkKey1 != shortLinkKey2 {
 		t.Error("Ошибка дедупликация не сработала")
 	} else {
 		t.Log("Дедупликация прошла успешно")
 	}
 	mystruct.SetDeduplicationStatus(false)
-	shortLinkKey1 = mystruct.Shorten(myURL)
-	shortLinkKey2 = mystruct.Shorten(myURL)
+	shortLinkKey1, err = mystruct.Shorten(myURL)
+	if err != nil {
+		t.Error("Был получен не валидный URL")
+	}
+	shortLinkKey2, err = mystruct.Shorten(myURL)
+	if err != nil {
+		t.Error("Был получен не валидный URL")
+	}
 	if shortLinkKey1 == shortLinkKey2 {
 		t.Error("Ошибка два одинаковых ключа с отключенной дедупликацией")
+	}
+
+}
+
+func TestValidatorOfURL(t *testing.T) {
+	if mystruct.enableValidation {
+
+		errorPath := make([]string, 7)
+		errorPath[0] = "http//testsite/"
+		errorPath[1] = "http:/testsite/"
+		errorPath[2] = "//testsite/"
+		errorPath[3] = "http:\\testsite/"
+		errorPath[4] = "testsite"
+		errorPath[5] = "htp://testsite/"
+		errorPath[6] = "http:///testsite/"
+
+		for _, myURL := range errorPath {
+
+			_, err := mystruct.Shorten(myURL)
+			if err == nil {
+				t.Error("Валидация пропустила адрес: " + myURL)
+			}
+		}
 	}
 
 }
