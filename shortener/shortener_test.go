@@ -19,6 +19,13 @@ const (
 	letterIdxMax  = int(63 / letterIdxBits)
 )
 
+func init() {
+	err := mystruct.SetDeduplicationStatus(true)
+	if err != nil {
+		panic("ошибка установки статуса дедупликации")
+	}
+}
+
 func BenchmarkAddLinks(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
