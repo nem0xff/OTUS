@@ -18,8 +18,9 @@ type Shortener interface {
 
 // Shorten - main struct
 type Shorten struct {
-	storage   []string
-	hashToNum map[string]string
+	deduplication bool
+	storage       []string
+	hashToNum     map[string]string
 }
 
 // Shorten - get short link of url
@@ -36,6 +37,17 @@ func (s *Shorten) Resolve(url string) string {
 		return ""
 	}
 	return s.storage[key]
+}
+
+// SetDeduplicationStatus - set status deduplication link
+func (s *Shorten) SetDeduplicationStatus(status bool) error {
+	s.deduplication = status
+	return nil
+}
+
+// GetDeduplicationStatus - get deduplication status
+func (s *Shorten) GetDeduplicationStatus() (bool, error) {
+	return s.deduplication, nil
 }
 
 func base10ToNewBase(i int) string {
