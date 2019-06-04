@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/beevik/ntp"
@@ -14,7 +15,7 @@ func main() {
 	ntptime, err := ntp.Time("0.beevik-ntp.pool.ntp.org")
 
 	if err != nil {
-		panic("Что-то не так")
+		log.Fatalf("Произошла ошибка: %v", err)
 	}
 
 	fmt.Println(ntptime.Format("NTP-сервер: 15:04:05 Дата: 02.01.2006"))
