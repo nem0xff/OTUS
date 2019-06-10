@@ -15,6 +15,6 @@ type IRepository interface {
 }
 
 type IKeyGenerator interface {
-	CreateKey(data int) error
+	GenerateKey(data int) (string, error)
 	ResolvKey(key string) (int, error)
 }

@@ -10,9 +10,17 @@ const (
 	base     = len(alphabet)
 )
 
-func base10ToNewBase(i int) string {
+type keyGenerator struct {
+}
+
+func NewKeyGenerator() (*keyGenerator, error) {
+	keyGenerator := keyGenerator{}
+	return &keyGenerator, nil
+}
+
+func (k *keyGenerator) GenerateKey(data int) (string, error) {
 	var result []byte
-	remain := i
+	remain := data
 
 	for remain > base-1 {
 		result = append(result, alphabet[remain%base])
@@ -25,15 +33,15 @@ func base10ToNewBase(i int) string {
 		result[i], result[j] = result[j], result[i]
 	}
 
-	return string(result)
+	return string(result), nil
 }
 
-func newBaseToBase10(number string) int {
+func (k *keyGenerator) ResolvKey(key string) (int, error) {
 	var result int
-	lenght := len(number) - 1
-	for i, s := range number {
+	lenght := len(key) - 1
+	for i, s := range key {
 		index := strings.Index(alphabet, string(s))
 		result = result + index*int(math.Pow(float64(base), float64(lenght-i)))
 	}
-	return result
+	return result, nil
 }

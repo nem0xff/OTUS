@@ -65,15 +65,20 @@ func TestResolve(t *testing.T) {
 	}
 }
 
-func TestBase10ToNewBase(t *testing.T) {
-	if base10ToNewBase(73456487) != "4Ydo3" {
+func TestGeneratorKey(t *testing.T) {
+	var keygen keyGenerator
+	key, _ := keygen.GenerateKey(73456487)
+	if key != "4Ydo3" {
 		t.Error("Неверный результат преобразования в новую систему счисления")
 	}
+
 }
 
 func TestNewBaseToBase10(t *testing.T) {
 	// 4Ydo3 - 73456487
-	if newBaseToBase10("4Ydo3") != 73456487 {
+	var keygen keyGenerator
+	id, _ := keygen.ResolvKey("4Ydo3")
+	if id != 73456487 {
 		t.Error("Неверный результат преобразования в десятичную систему счисления")
 	}
 }

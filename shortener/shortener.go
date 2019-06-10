@@ -8,11 +8,9 @@ import (
 
 // Shorten - main struct
 type Shorten struct {
-	repository IRepository
-	//deduplication    bool
+	repository       IRepository
+	keyGenerator     IKeyGenerator
 	enableValidation bool
-	//storage          []string
-	//hashToNum        map[string]string
 }
 
 // NewShorten - create instance with init
@@ -27,12 +25,7 @@ func NewShorten(deduplication bool, validation bool) (*Shorten, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	// TODO: убрать лишнее
-	//shorten.hashToNum = make(map[string]string)
-	//shorten.deduplication = deduplication
-	//shorten.enableValidation = validation
-
+	shorten.keyGenerator, err = NewKeyGenerator()
 	return &shorten, nil
 }
 
@@ -49,14 +42,14 @@ func (s *Shorten) Shorten(urlPath string) (string, error) {
 
 	data.url = urlPath
 	id, err := s.repository.Create(data)
-	key = base10ToNewBase(id)
+	key, _ = s.keyGenerator.GenerateKey(id)
 
 	return key, err
 }
 
 // Resolve - resolv short link of url
 func (s *Shorten) Resolve(url string) string {
-	id := newBaseToBase10(url)
+	id, _ := s.keyGenerator.ResolvKey(url)
 	result, err := s.repository.GetByID(id)
 	if err != nil {
 		return ""
