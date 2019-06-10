@@ -19,9 +19,9 @@ func init() {
 func TestDePack(t *testing.T) {
 	for key, val := range testArray {
 		if dePack(key) != val {
-			t.Errorf("Error: key=%v , val=%v, dePack(key)=%v", key, val, dePack(key))
+			t.Errorf("Error: key='%v' , val='%v', dePack(key)='%v'", key, val, dePack(key))
 		} else {
-			t.Logf("Success: key=%v, val=%v, dePack(key)=%v", key, val, dePack(key))
+			t.Logf("Success: key='%v', val='%v', dePack(key)='%v'", key, val, dePack(key))
 		}
 	}
 }
