@@ -83,7 +83,6 @@ func TestNewBaseToBase10(t *testing.T) {
 	}
 }
 
-//Todo: починить дедупликацию
 func TestDeduplication(t *testing.T) {
 	myURL := makePseudoURL()
 	shortLinkKey1, err := mystruct.Shorten(myURL)
