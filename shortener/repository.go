@@ -40,16 +40,20 @@ func (r *Repository) Create(data Data) (int, error) {
 	id = r.idCount
 
 	data.dateOfSave = fmt.Sprint(time.Now().Format("15:04:05 02.01.2006"))
-	r.storage[id] = data
 
 	if r.deduplication {
 		hash := fmt.Sprintf("%x", md5.Sum([]byte(data.url)))
-		r.hashMap[hash] = id
+		if oldId, ok := r.hashMap[hash]; ok {
+			id = oldId
+		} else {
+			r.hashMap[hash] = id
+		}
 	}
+
+	r.storage[id] = data
 
 	r.idCount = r.idCount + 1
 	return id, err
-
 }
 
 func (r *Repository) Update(id int, data Data) error {
@@ -58,11 +62,13 @@ func (r *Repository) Update(id int, data Data) error {
 		if val.url == data.url {
 			r.storage[id] = data
 		} else {
-			newMd5Sum := fmt.Sprintf("%x", md5.Sum([]byte(data.url)))
 			oldMd5Sum := fmt.Sprintf("%x", md5.Sum([]byte(val.url)))
-			delete(r.hashMap, oldMd5Sum)
-			r.hashMap[newMd5Sum] = id
-			r.storage[id] = data
+			if _, ok := r.hashMap[oldMd5Sum]; ok {
+				newMd5Sum := fmt.Sprintf("%x", md5.Sum([]byte(data.url)))
+				delete(r.hashMap, oldMd5Sum)
+				r.hashMap[newMd5Sum] = id
+				r.storage[id] = data
+			}
 		}
 	} else {
 		err = errors.New("Нет такой записи")
