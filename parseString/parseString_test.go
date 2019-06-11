@@ -25,3 +25,23 @@ func TestDePack(t *testing.T) {
 		}
 	}
 }
+
+func TestFirstLetterIsNumber(t *testing.T) {
+	testData := map[string]bool{
+		"asd":  false,
+		"0asd": true,
+		"9asd": true,
+		"4asd": true,
+		" asd": false,
+		"_asd": false,
+		"4ющц": true,
+		"ющу":  false,
+	}
+	for testStr, val := range testData {
+		if firstLetterIsNumber(testStr) != val {
+			t.Errorf("Функциция вернула не верное значение firstLetterIsNumber('%v')=%v, ожидаемое значение %v", testStr, firstLetterIsNumber(testStr), val)
+		} else {
+			t.Logf(" firstLetterIsNumber('%v')=%v, ожидаемое значение %v", testStr, firstLetterIsNumber(testStr), val)
+		}
+	}
+}
