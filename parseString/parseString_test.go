@@ -14,6 +14,9 @@ func init() {
 		`qwe\4\5`:  "qwe45",
 		`qwe\45`:   `qwe44444`,
 		`qwe\\5`:   `qwe\\\\\`,
+		`якцупцоп`: `якцупцоп`,
+		`я4ба8qwe`: `яяяябааааааааqwe`,
+		`a11ф12`:   `aaaaaaaaaaaфффффффффффф`,
 	}
 }
 func TestDePack(t *testing.T) {
@@ -26,22 +29,24 @@ func TestDePack(t *testing.T) {
 	}
 }
 
-func TestFirstLetterIsNumber(t *testing.T) {
+func TestNextSymbIsNumber(t *testing.T) {
 	testData := map[string]bool{
-		"asd":  false,
-		"0asd": true,
-		"9asd": true,
-		"4asd": true,
-		" asd": false,
-		"_asd": false,
-		"4ющц": true,
-		"ющу":  false,
+		"asd":    false,
+		"0asd":   true,
+		"9asd":   true,
+		"4asd":   true,
+		" asd":   false,
+		"_asd":   false,
+		"4ющц":   true,
+		"ющу":    false,
+		"ю7щ":    false,
+		"d5dfdf": false,
 	}
 	for testStr, val := range testData {
-		if firstLetterIsNumber(testStr) != val {
-			t.Errorf("Функциция вернула не верное значение firstLetterIsNumber('%v')=%v, ожидаемое значение %v", testStr, firstLetterIsNumber(testStr), val)
+		if nextSymbIsNumber(testStr) != val {
+			t.Errorf("Функциция вернула не верное значение firstLetterIsNumber('%v')=%v, ожидаемое значение %v", testStr, nextSymbIsNumber(testStr), val)
 		} else {
-			t.Logf(" firstLetterIsNumber('%v')=%v, ожидаемое значение %v", testStr, firstLetterIsNumber(testStr), val)
+			t.Logf(" firstLetterIsNumber('%v')=%v, ожидаемое значение %v", testStr, nextSymbIsNumber(testStr), val)
 		}
 	}
 }
