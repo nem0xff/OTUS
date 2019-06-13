@@ -4,7 +4,7 @@ import (
 	"unicode/utf8"
 )
 
-const delimeters = " :,.;\n\t?!-"
+const delimeters = " :,.;\n\t\r?!-"
 
 func freqAnalysis(str string) map[string]int {
 	result := map[string]int{}
