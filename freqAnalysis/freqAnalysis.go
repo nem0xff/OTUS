@@ -1,11 +1,41 @@
-package freqAnalysis
+package main
 
 import (
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
 	"sort"
 	"unicode/utf8"
 )
 
 const delimeters = " :,.;\n\t\r?!-"
+
+func main() {
+	alasysis := freqAnalysis(getTestText("test.txt"))
+	sortedList := sortByCount(alasysis)
+	printWords(getFirstTenOfArray(sortedList))
+}
+
+func printWords(w words) {
+	for _, val := range w {
+		fmt.Printf("%v - %v\n", val.word, val.count)
+	}
+}
+
+func getTestText(filename string) string {
+	file, err := os.Open(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(data)
+}
 
 func freqAnalysis(str string) map[string]int {
 	result := map[string]int{}
