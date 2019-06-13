@@ -9,11 +9,10 @@ import (
 )
 
 func TestFreqAnalysis(t *testing.T) {
-	//alasysis := freqAnalysis("tst tst one one two three four five six seven seven seven seven nine nine nine ten ten")
 
 	alasysis := freqAnalysis(getTestText("test.txt"))
-	//t.Logf("%v", alasysis)
-	printMap(&alasysis)
+	sortedList := sortByCount(alasysis)
+	fmt.Println(getFirstTenOfArray(sortedList))
 }
 
 func printMap(analysis *map[string]int) {
