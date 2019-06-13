@@ -9,10 +9,10 @@ import (
 	"unicode/utf8"
 )
 
-const delimeters = " :,.;\n\t\r?!-"
+const delimeters = " :,.;\n\t\r?!-()[]"
 
 func main() {
-	alasysis := freqAnalysis(getTestText("test.txt"))
+	alasysis := freqAnalysis(getTestText("warpeace.txt"))
 	sortedList := sortByCount(alasysis)
 	printWords(getFirstTenOfArray(sortedList))
 }
