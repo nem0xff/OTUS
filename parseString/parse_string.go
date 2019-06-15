@@ -62,8 +62,8 @@ func getNextSymb(str *string) rune {
 }
 
 func isNextSymbNumber(str *string) bool {
-	firstLetter, _ := utf8.DecodeRuneInString(*str)
-	return unicode.IsDigit(firstLetter)
+	nextRune, _ := utf8.DecodeRuneInString(*str)
+	return unicode.IsDigit(nextRune)
 }
 
 // False если строка пустая или начинается с цифры
