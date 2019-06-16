@@ -1,14 +1,30 @@
 package doublylinkedlist
 
 type item struct {
+	ptrList *itemList
 	ptrNext *item
 	ptrPrev *item
 	data    interface{}
 }
 
-func (i *item) remove() {
-	i.ptrNext.ptrPrev = i.ptrPrev
-	i.ptrPrev.ptrNext = i.ptrNext
+func (i *item) Remove() {
+	if i.ptrNext != nil {
+		i.ptrNext.ptrPrev = i.ptrPrev
+	} else {
+		i.ptrList.lastItem = i.ptrPrev
+	}
+
+	if i.ptrPrev != nil {
+		i.ptrPrev.ptrNext = i.ptrNext
+	} else {
+		i.ptrList.firstItem = i.ptrNext
+	}
+
+	i.ptrNext = nil
+	i.ptrPrev = nil
+
+	i.ptrList.lenght = i.ptrList.lenght - 1
+
 }
 
 func (i *item) Value() interface{} { return i.data }

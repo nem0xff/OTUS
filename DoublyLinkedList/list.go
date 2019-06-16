@@ -10,21 +10,19 @@ func (l *itemList) pushFront(val interface{}) {
 
 	var newItem item
 
-	if l.lenght == 0 && l.firstItem == nil && l.lastItem == nil { //Обрабатываем самый первый элемент
-		newItem.data = val
-		l.firstItem = &newItem
+	if l.lenght == 0 && l.firstItem == nil && l.lastItem == nil {
+		//Обрабатываем самый первый элемент
 		l.lastItem = &newItem
-		l.lenght = l.lenght + 1
-		return
+	} else {
+		// Все последующие элементы
+		newItem.ptrNext = l.firstItem
+		newItem.ptrNext.ptrPrev = &newItem
 	}
 
-	newItem.ptrNext = l.firstItem
 	l.firstItem = &newItem
-
-	newItem.ptrNext.ptrPrev = &newItem
-
-	l.lenght = l.lenght + 1
 	newItem.data = val
+	newItem.ptrList = l
+	l.lenght = l.lenght + 1
 
 }
 
@@ -32,7 +30,7 @@ func (l *itemList) pushBack(val interface{}) {
 
 	var newItem item
 
-	if l.lenght == 0 && l.firstItem == nil && l.lastItem == nil { // Это первый элемент
+	if l.lenght == 0 && l.firstItem == nil && l.lastItem == nil { // Это первый элемент можно использовать pushFront
 		l.pushFront(val)
 	}
 
@@ -43,12 +41,7 @@ func (l *itemList) pushBack(val interface{}) {
 
 	l.lenght = l.lenght + 1
 	newItem.data = val
-
-}
-
-func (l *itemList) Remove(i *item) {
-	i.remove()
-	l.lenght = l.lenght - 1
+	newItem.ptrList = l
 }
 
 func (l *itemList) First() *item { return l.firstItem }
