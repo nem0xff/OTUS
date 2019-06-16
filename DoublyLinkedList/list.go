@@ -6,7 +6,7 @@ type itemList struct {
 	lenght    int
 }
 
-func (l *itemList) pushFront(val interface{}) {
+func (l *itemList) PushFront(val interface{}) {
 
 	var newItem item
 
@@ -26,12 +26,12 @@ func (l *itemList) pushFront(val interface{}) {
 
 }
 
-func (l *itemList) pushBack(val interface{}) {
+func (l *itemList) PushBack(val interface{}) {
 
 	var newItem item
 
 	if l.lenght == 0 && l.firstItem == nil && l.lastItem == nil { // Это первый элемент можно использовать pushFront
-		l.pushFront(val)
+		l.PushFront(val)
 	}
 
 	newItem.ptrPrev = l.lastItem
