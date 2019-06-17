@@ -131,5 +131,8 @@ func (w words) Swap(i, j int) {
 }
 
 func getFirstTenOfArray(w words) words {
-	return w[0:10]
+	if len(w) > 10 {
+		return w[0:10]
+	}
+	return w
 }
