@@ -42,11 +42,7 @@ func freqAnalysis(str string) map[string]int {
 	for len(str) > 0 {
 		key := getNextWord(&str)
 		if key != "" { // последние знаки препинания могут вернуть пустую строку
-			if _, ok := result[key]; ok {
-				result[key] = result[key] + 1
-			} else {
-				result[key] = 1
-			}
+			result[key]++
 		}
 	}
 	return result
