@@ -29,6 +29,10 @@ func TestSearchMax(t *testing.T) {
 
 	var compare isLess = func(one interface{}, two interface{}) bool {
 
+		if one == nil && two == nil {
+			return false
+		}
+
 		if one == nil {
 			return true
 		}
