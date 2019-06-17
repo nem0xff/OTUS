@@ -97,3 +97,18 @@ func TestRemoveMiddleItem(t *testing.T) {
 	}
 
 }
+
+func TestRemoveOneofTwoItem(t *testing.T) {
+	item := testList.First()
+	oldLen := testList.Len()
+	item.Remove()
+	if oldLen == testList.Len() {
+		t.Error("После удаления не изменилась длина Списка")
+	}
+
+	item = testList.Last()
+
+	if testList.firstItem == nil || testList.lastItem == nil || testList.firstItem != testList.lastItem {
+		t.Error("При оставшемся последнем элементе не совпадают аказатели на первый и последний элемент Списка")
+	}
+}
