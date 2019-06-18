@@ -1,7 +1,6 @@
 package searchMax
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -21,13 +20,7 @@ func TestSearchMax(t *testing.T) {
 
 	trueResult := myval{"mike", 30}
 
-	vals := make([]interface{}, len(users))
-
-	for i, user := range users {
-		vals[i] = user
-	}
-
-	var compare isLess = func(one interface{}, two interface{}) bool {
+	var compare isLess = func(one, two interface{}) bool {
 
 		if one == nil && two == nil {
 			return false
@@ -44,13 +37,11 @@ func TestSearchMax(t *testing.T) {
 		return one.(myval).age < two.(myval).age
 	}
 
-	result := searchMax(compare, vals...)
+	result := searchMax(compare, users)
 	t.Logf("Исходные данные:\n%v\n", users)
 	t.Logf("Максимальный элемент:\n%v\n", result)
 
 	if result != trueResult {
 		t.Error("Вернулось не верное значение")
 	}
-	fmt.Println(result)
-
 }
