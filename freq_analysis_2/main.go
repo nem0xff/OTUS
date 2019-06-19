@@ -9,18 +9,12 @@ import (
 	"unicode"
 )
 
-const delimeters = " :,.;\n\t\r?!-()[]"
-
-func printWords(w words) {
-	for _, val := range w {
-		fmt.Printf("%v - %v\n", val.word, val.count)
-	}
-}
+const boundOfPrint int = 10
 
 func main() {
 	alasysis := freqAnalysis(getTestText("warpeace.txt"))
 	sortedList := sortByCount(alasysis)
-	printWords(getFirstTenOfArray(sortedList))
+	fmt.Print(sortedList)
 }
 
 func getTestText(filename string) string {
@@ -51,11 +45,4 @@ func freqAnalysis(str string) map[string]int {
 		result[val]++
 	}
 	return result
-}
-
-func getFirstTenOfArray(w words) words {
-	if len(w) > 10 {
-		return w[0:10]
-	}
-	return w
 }

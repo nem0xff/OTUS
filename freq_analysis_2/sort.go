@@ -1,6 +1,9 @@
 package main
 
-import "sort"
+import (
+	"fmt"
+	"sort"
+)
 
 func sortByCount(freqWord map[string]int) words {
 	result := make(words, len(freqWord))
@@ -32,4 +35,14 @@ func (w words) Less(i, j int) bool {
 
 func (w words) Swap(i, j int) {
 	w[i], w[j] = w[j], w[i]
+}
+
+func (w words) String() string {
+	var result string
+	for i := 0; i < len(w) && i < boundOfPrint; {
+		result += fmt.Sprintf("%v - %v\n", w[i].word, w[i].count)
+		i++
+	}
+
+	return result
 }
