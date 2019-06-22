@@ -17,20 +17,14 @@ type HwSubmitted struct {
 	Comment string
 }
 
-type OtusEvent interface{}
+type OtusEvent interface {
+	logMessage() string
+}
 
 func LogOtusEvent(e OtusEvent, w io.Writer) {
 
 	date := time.Now().Format("02.01.2006 - 15:04:05")
+	message := e.logMessage()
 
-	switch val := e.(type) {
-	case HwAccepted:
-		fmt.Fprintf(w, "%v: accepted %v %v", date, val.Id, val.Grade)
-		return
-	case HwSubmitted:
-		fmt.Fprintf(w, "%v: submitted %v \"%v\"", date, val.Id, val.Comment)
-		return
-	}
-
-	fmt.Fprintf(w, "%v: got some new type %T", date, e)
+	fmt.Fprintf(w, "%v: %v", date, message)
 }
