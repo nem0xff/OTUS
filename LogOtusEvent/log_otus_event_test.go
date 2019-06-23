@@ -5,27 +5,9 @@ import (
 	"testing"
 )
 
-type HwAcceptedEvent struct {
-	HwAccepted
-}
-
-func (e HwAcceptedEvent) logMessage() (result string) {
-	result = fmt.Sprintf("accepted %v %v", e.Id, e.Grade)
-	return
-}
-
-type HwSubmittedEvent struct {
-	HwSubmitted
-}
-
-func (e HwSubmittedEvent) logMessage() (result string) {
-	result = fmt.Sprintf("submitted %v \"%v\"", e.Id, e.Comment)
-	return
-}
-
 func TestSendHwAccepted(t *testing.T) {
 
-	var event HwAcceptedEvent
+	var event HwAccepted
 
 	event.Id = 3456
 	event.Grade = 4
@@ -35,7 +17,7 @@ func TestSendHwAccepted(t *testing.T) {
 
 func TestSendHwSubmitted(t *testing.T) {
 
-	var event HwSubmittedEvent
+	var event HwSubmitted
 
 	event.Id = 3576
 	event.Comment = "Some comment text"
