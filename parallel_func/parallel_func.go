@@ -17,17 +17,13 @@ type Executer struct {
 
 func (e *Executer) startTask(task Task, syncChannel chan interface{}) {
 	defer e.wg.Done()
-	var emptyVar interface{}
-	syncChannel <- emptyVar
-	if e.allowWork() {
-		err := task()
-		if err != nil {
-			e.mu.Lock()
-			e.errorCount += 1
-			e.mu.Unlock()
-		}
-
+	err := task()
+	if err != nil {
+		e.mu.Lock()
+		e.errorCount += 1
+		e.mu.Unlock()
 	}
+
 	_ = <-syncChannel
 }
 
@@ -36,22 +32,30 @@ func (e *Executer) startTasks(tasks []Task, maxErrorCount int, maxPacketExecutio
 	e.maxErrorCount = maxErrorCount
 	syncChannel := make(chan interface{}, maxPacketExecution)
 	for _, task := range tasks {
-		if e.allowWork() {
-			e.wg.Add(1)
-			go e.startTask(task, syncChannel)
-			e.taskCount++
+
+		var emptyVar interface{}
+		syncChannel <- emptyVar
+
+		if !e.allowWork() {
+			break
 		}
 
+		e.wg.Add(1)
+		go e.startTask(task, syncChannel)
+		e.taskCount++
+
 	}
+
+	close(syncChannel)
 	e.wg.Wait()
-	fmt.Println(e.errorCount)
+	fmt.Printf("Было создано задач: %v\nВозникло ошибок: %v", e.taskCount, e.errorCount)
 	return nil
 }
 
 func (e *Executer) allowWork() bool {
-	e.mu.Lock()
+	//e.mu.Lock()
 	result := e.errorCount < e.maxErrorCount
-	e.mu.Unlock()
+	//e.mu.Unlock()
 
 	return result
 }

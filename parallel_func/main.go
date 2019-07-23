@@ -14,7 +14,7 @@ func init() {
 
 const (
 	MAX_TIME_EXECUTION   = 500  // Максимальное время выполнения создаваемых функций
-	MAX_ERROR_COUNT      = 3    // Максимальное допустимое количество ошибок после которого останавливаем если еще что-то осталось
+	MAX_ERROR_COUNT      = 6    // Максимальное допустимое количество ошибок после которого останавливаем если еще что-то осталось
 	NUMBER_FUNCS         = 1000 //количество функций
 	MAX_PACKET_EXECUTION = 5    // Максимальное количество одновременно выполняемых заданий
 )
@@ -34,8 +34,12 @@ func getFuncs(n int) []Task {
 		timeExec := time.Millisecond * time.Duration(rand.Intn(MAX_TIME_EXECUTION))
 		f := func() error {
 			time.Sleep(timeExec)
-			fmt.Printf("Message from func #%v, time exection %v \n", z, timeExec)
-			if rand.Intn(100) > 80 {
+			var makeError bool
+			if rand.Intn(100) > 90 { // 10 процентов функций из созданных возвращают ошибку
+				makeError = true
+			}
+			fmt.Printf("Message from func #%v, time exection %v, error = %v\n", z, timeExec, makeError)
+			if makeError {
 				return errors.New("error in function")
 			} else {
 				return nil
