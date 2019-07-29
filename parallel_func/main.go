@@ -23,7 +23,10 @@ func main() {
 	var executer Executer
 
 	pf := getFuncs(NUMBER_FUNCS)
-	_ = executer.startTasks(pf[:], MAX_ERROR_COUNT, MAX_PACKET_EXECUTION)
+	err := executer.startTasks(pf[:], MAX_ERROR_COUNT, MAX_PACKET_EXECUTION, true)
+	if err != nil {
+		fmt.Printf("Возникла ошибка при выполнении: %v", err)
+	}
 }
 
 // Создаем массив из функций с различным временем выполнения.

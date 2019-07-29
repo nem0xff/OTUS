@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"sync"
 )
@@ -27,7 +28,7 @@ func (e *Executer) startTask(task Task, syncChannel chan interface{}) {
 	_ = <-syncChannel
 }
 
-func (e *Executer) startTasks(tasks []Task, maxErrorCount int, maxPacketExecution int) error {
+func (e *Executer) startTasks(tasks []Task, maxErrorCount int, maxPacketExecution int, printStat bool) error {
 
 	e.maxErrorCount = maxErrorCount
 	syncChannel := make(chan interface{}, maxPacketExecution)
@@ -48,7 +49,14 @@ func (e *Executer) startTasks(tasks []Task, maxErrorCount int, maxPacketExecutio
 
 	close(syncChannel)
 	e.wg.Wait()
-	fmt.Printf("Было создано задач: %v\nВозникло ошибок: %v", e.taskCount, e.errorCount)
+
+	if printStat {
+		e.printInfo()
+	}
+	if len(tasks) > e.taskCount {
+		errStr := fmt.Sprintf("Не было выполнено %v задач из-за превышения максимально допустимого количества ошибок %v\n", len(tasks)-e.taskCount, maxErrorCount)
+		return errors.New(errStr)
+	}
 	return nil
 }
 
@@ -58,4 +66,8 @@ func (e *Executer) allowWork() bool {
 	//e.mu.Unlock()
 
 	return result
+}
+
+func (e *Executer) printInfo() {
+	fmt.Printf("---\nСтатистика:\nБыло выполнено задач: %v\nВозникло ошибок при выполнении: %v\n---\n", e.taskCount, e.errorCount)
 }
